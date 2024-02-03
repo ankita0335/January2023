@@ -1,17 +1,18 @@
 class Solution {
 public:
-    int findDuplicate(vector<int>& nums) {
-        unordered_map<int,int>mp;
-        int ans=0;
-        for(int i=0;i<nums.size();i++)
+    int findDuplicate(std::vector<int>& nums) {
+        for(int i = 0; i < nums.size(); i++) 
         {
-            mp[nums[i]]++;
+            int ind = abs(nums[i]) - 1;
+            if(nums[ind] > 0) 
+            {
+                nums[ind] = -nums[ind];
+            } 
+            else
+            {
+                return abs(nums[i]);
+            }
         }
-        for(auto i:mp)
-        {
-            if(i.second>=2)
-                ans=i.first;
-        }
-        return ans;
+        return -1; 
     }
 };
