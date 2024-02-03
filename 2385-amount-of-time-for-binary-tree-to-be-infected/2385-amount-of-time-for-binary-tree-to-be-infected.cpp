@@ -1,41 +1,43 @@
 class Solution {
 public:
-
-    vector <vector<int>> graph;
-    vector <bool> vis;
-    int res = 0;
-    void go(TreeNode* root){
-        if(!root) return;
-
-        int val = root->val;
-        TreeNode* leftNode = root->left;
-        TreeNode* rightNode = root->right;
-        if(leftNode){
-            int l = leftNode->val;
-            graph[val].push_back(l);
-            graph[l].push_back(val);
+    map<int, vector<int>> mp;
+    int ans=0;
+    map<int, bool>vis;
+    void dfs(TreeNode* root) {
+        if (root == NULL)
+            return;
+            vis[root->val]=false;
+        if (root->left) {
+            mp[root->left->val].push_back(root->val);
+            mp[root->val].push_back(root->left->val);
+            dfs(root->left);
         }
-        if(rightNode){
-            int r = rightNode->val;
-            graph[val].push_back(r);
-            graph[r].push_back(val);
+        if (root->right) {
+            mp[root->right->val].push_back(root->val);
+            mp[root->val].push_back(root->right->val);
+            dfs(root->right);
         }
-        go(leftNode);
-        go(rightNode);
+        return;
     }
-    void dfs(int node, int w){
-        vis[node] = true;
-        res = max(res, w);
-        for(auto child: graph[node]){
-            if(!vis[child]) 
-                dfs(child, w + 1);
+
+    int amountOfTime(TreeNode* root, int start) { 
+        dfs(root); 
+        
+        queue<pair<int, int>>Q;
+        Q.push({start, 0});
+        vis[start]=true;
+        while(!Q.empty()){
+            pair<int, int>pr=Q.front();
+
+            Q.pop();
+            int currNode=pr.first, time=pr.second;
+            vis[currNode]=true;
+            ans=max(ans, time);
+            for(auto n:mp[currNode]){
+                if(vis[n]==false) Q.push({n, time+1});
+            }
+
         }
-    }
-    int amountOfTime(TreeNode* root, int start) {
-        graph.resize(1e5 + 7);
-        vis.resize(1e5 + 7);
-        go(root);
-        dfs(start, 0);
-        return res;
+        return ans;
     }
 };
