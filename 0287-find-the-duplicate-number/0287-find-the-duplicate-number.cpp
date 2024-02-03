@@ -3,10 +3,9 @@ public:
     int findDuplicate(std::vector<int>& nums) {
         for(int i = 0; i < nums.size(); i++) 
         {
-            int ind = abs(nums[i]) - 1;
-            if(nums[ind] > 0) 
+            if(nums[abs(nums[i])] > 0) 
             {
-                nums[ind] = -nums[ind];
+                nums[abs(nums[i])] = -nums[abs(nums[i])];
             } 
             else
             {
